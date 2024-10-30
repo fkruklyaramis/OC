@@ -4,8 +4,6 @@ from classe import Book
 import csv
 import re
 
-
-# Étape 1 : Envoie une requête à la page web que tu veux scrapper
 book_url = "http://books.toscrape.com/catalogue/its-only-the-himalayas_981/index.html"
 response = requests.get(book_url)
 
@@ -94,7 +92,6 @@ if response.status_code == 200:
     if breadcrumb_ul:
         # Récupère tous les éléments <li> dans la liste
         li_items = breadcrumb_ul.find_all("li")
-        print (li_items)
         if len(li_items) >= 2:
             # Récupère le troisième <li>
             third_li = li_items[2]  # Indice 2 pour la troisième <li>
