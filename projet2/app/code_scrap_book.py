@@ -1,8 +1,8 @@
 import re
 import requests
 from bs4 import BeautifulSoup
-from classes import Book
-from functions import clean_price,print_data_into_csv
+from app.classes import Book
+from app.functions import clean_price,print_data_into_csv
 
 def get_data_book(book_url: str):
     try:
@@ -39,7 +39,7 @@ def get_data_book(book_url: str):
         book = Book(
             product_page_url=book_url,
             universal_product_code=upc_value,
-            title=title_value,
+            title=title_value.replace("/",""),
             price_including_tax=price_including_tax,
             price_excluding_tax=price_excluding_tax,
             number_available=number_available,
