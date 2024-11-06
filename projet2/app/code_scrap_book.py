@@ -73,6 +73,7 @@ def iterate_categories_print_all_books_pictures(site_url: str):
             response = requests.get(category_url)
             response.raise_for_status()
             soup_parser = BeautifulSoup(response.text, 'html.parser')
+            print(f"Processing data for category : {category_name}")
 
             # get the number of pages 
             if soup_parser.find("ul", class_="pager"):
@@ -94,7 +95,6 @@ def iterate_categories_print_all_books_pictures(site_url: str):
                     book_object_array.append(get_data_book(book_url).model_dump())
 
             #print data array into csv with category name
-            print(f"Printing data into csv for category : {category_name}")
             print_data_into_csv(f"{category_name}.csv", book_object_array, "./csv")  
 
     except requests.RequestException as e:
