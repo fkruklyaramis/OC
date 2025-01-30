@@ -1,10 +1,14 @@
+
+
 class PlayerView:
+
     def get_player_details(self):
         print("Ajout d'un joueur :")
         last_name = input("Nom de famille : ")
         first_name = input("Prénom : ")
         birth_date = input("Date de naissance (YYYY-MM-DD) : ")
         chess_id = input("Identifiant d'échecs : ")
+        # créer l'objet ici et le retourner
         return {"last_name": last_name, "first_name": first_name, "birth_date": birth_date, "chess_id": chess_id}
 
     def display_players(self, players):
@@ -12,3 +16,9 @@ class PlayerView:
         for player in players:
             print(f"{player['chess_id']} - {player['last_name']} {player['first_name']} "
                   f"{player['birth_date']}")
+
+    def menu(self, choice_list: list[dict]):
+        for value in choice_list:
+            print(f"{value['value']} : {value['label']}")
+        choice = int(input("Choisissez une option : "))
+        return choice

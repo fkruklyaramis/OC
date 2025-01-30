@@ -1,28 +1,25 @@
 import json
 from models.player_model import Player
+from views.player_view import PlayerView
 
 
 class PlayerController():
-    def __init__(self, view):
+
+    def __init__(self, view: PlayerView):
         self.view = view
         self.players_file = "./data/players.json"
+        self.menu_choice_list = [{'value': 1, 'label': 'Ajouter un joueur', 'callback': self.add_player},
+                                 {'value': 2, 'label': 'Lister tous les joueur', 'callback': self.list_players},
+                                 {'value': 3, 'label': 'Quitter'}]
 
     def manage_players(self):
         while True:
-            print("\nGestion des joueurs :")
-            print("1. Ajouter un joueur")
-            print("2. Lister tous les joueurs")
-            print("3. Quitter")
-
-            choice = input("Choisissez une option : ")
-            if choice == "1":
-                self.add_player()
-            elif choice == "2":
-                self.list_players()
-            elif choice == "3":
-                break
+            choice = self.view.menu(self.menu_choice_list)
+            menu_choice = next((item for item in self.menu_choice_list if item['value'] == choice), None)
+            if menu_choice and 'callback' in menu_choice:
+                menu_choice['callback']()
             else:
-                print("Choix invalide, veuillez réessayer.")
+                break
 
     def add_player(self):
         data = self.view.get_player_details()
@@ -34,7 +31,7 @@ class PlayerController():
         players = self.load_players()
         self.view.display_players(players)
 
-    def save_player(self, player):
+    def save_player(self, player: Player):
         try:
             with open(self.players_file, "r") as file:
                 players = json.load(file)
