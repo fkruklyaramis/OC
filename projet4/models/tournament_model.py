@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Tournament(BaseModel):
@@ -7,7 +7,7 @@ class Tournament(BaseModel):
     location: str
     startDate: str
     endDate: str
-    roundNumber: 4
+    roundNumber: int = Field(default=4)
     roundId: Optional[int]
     roundList: Optional[list]
     playerList: list

@@ -11,10 +11,9 @@ class TournamentController:
         self.view = view
         self.tournaments_file = "./data/tournaments.json"
         self.menu_choice_list = [{'value': 1, 'label': 'Démarrer un tournoi', 'callback': self.add_tournament},
-                                 {'value': 2, 'label': 'Arreter le tournoi en cours',
-                                  'callback': self.cancel_tournament},
-                                 {'value': 3, 'label': 'Gestion des joueurs',
-                                  'callback': PlayerController(PlayerView()).manage_players()}]
+                                 {'value': 2, 'label': 'Gestion des joueurs',
+                                  'callback': self.manage_players},
+                                 {'value': 3, 'label': 'Quitter', 'callback': exit}]
 
     def manage_tournament(self):
         choice = self.view.menu(self.menu_choice_list)
@@ -23,6 +22,9 @@ class TournamentController:
             menu_choice['callback']()
         else:
             None
+
+    def manage_players(self):
+        PlayerController(PlayerView()).manage_players()
 
     def add_tournament(self):
         data = self.view.get_tournament_details()
@@ -47,17 +49,6 @@ class TournamentController:
             tournaments = []
 
         tournaments.append(tournament.to_dict())
-
-        with open(self.tournaments_file, "w") as file:
-            json.dump(tournaments, file, indent=4)
-
-    def update_tournament(self, tournament: Tournament, attribut: str, value: str):
-        tournaments = self.load_tournaments()
-        for index, item in enumerate(tournaments):
-            if item["name"] == tournament.name:
-                setattr(tournament, attribut, value)
-                tournaments[index][attribut] = getattr(tournament, attribut)
-                break
 
         with open(self.tournaments_file, "w") as file:
             json.dump(tournaments, file, indent=4)
