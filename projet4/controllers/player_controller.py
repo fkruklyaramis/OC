@@ -10,16 +10,15 @@ class PlayerController():
         self.players_file = "./data/players.json"
         self.menu_choice_list = [{'value': 1, 'label': 'Ajouter un joueur', 'callback': self.add_player},
                                  {'value': 2, 'label': 'Lister tous les joueur', 'callback': self.list_players},
-                                 {'value': 3, 'label': 'Quitter'}]
+                                 {'value': 3, 'label': 'Retour au menu principal', 'callback': None}]
 
     def manage_players(self):
-        while True:
-            choice = self.view.menu(self.menu_choice_list)
-            menu_choice = next((item for item in self.menu_choice_list if item['value'] == choice), None)
-            if menu_choice and 'callback' in menu_choice:
-                menu_choice['callback']()
-            else:
-                break
+        choice = self.view.menu(self.menu_choice_list)
+        menu_choice = next((item for item in self.menu_choice_list if item['value'] == choice), None)
+        if menu_choice and 'callback' in menu_choice:
+            menu_choice['callback']()
+        else:
+            None
 
     def add_player(self):
         data = self.view.get_player_details()

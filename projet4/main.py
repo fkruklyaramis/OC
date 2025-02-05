@@ -1,12 +1,13 @@
-from views.player_view import PlayerView
-from controllers.player_controller import PlayerController
+
+from views.tournament_view import TournamentView
+from controllers.tournament_controller import TournamentController
 
 
 def main():
-    print("Bienvenue dans le gestionnaire de tournois d'échecs !")
-    view = PlayerView()
-    PlayerController(view).manage_players()
-    # only one while here to manage all menus
+    while True:
+        print("Bienvenue dans le gestionnaire de tournois d'échecs !")
+        main_view = TournamentView()
+        TournamentController(main_view).manage_tournament()
 
 
 if __name__ == "__main__":
