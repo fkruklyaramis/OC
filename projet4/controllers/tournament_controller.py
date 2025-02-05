@@ -3,7 +3,6 @@ from models.tournament_model import Tournament
 from views.tournament_view import TournamentView
 from views.player_view import PlayerView
 from controllers.player_controller import PlayerController
-from datetime import datetime
 
 
 class TournamentController:
@@ -32,15 +31,6 @@ class TournamentController:
         self.save_tournament(tournament)
         print("Le tournoi est lancé !")
 
-    def cancel_tournament(self):
-        # check si un tournoi est en cours
-        tournaments = self.load_tournaments()
-        for tournament in tournaments:
-            if tournament["end_date"] == "":
-                self.update_tournament(self, "end_date", str(datetime.now().strftime("%Y-%m-%d")))
-                print("Le tournoi est terminé !")
-                break
-
     def save_tournament(self, tournament: Tournament):
         try:
             with open(self.tournaments_file, "r") as file:
@@ -59,3 +49,30 @@ class TournamentController:
                 return json.load(file)
         except FileNotFoundError:
             return []
+
+    def select_players(self) -> list:
+        players = PlayerController(PlayerView()).load_players()
+        if not players:
+            print("Aucun joueur enregistré.")
+            return []
+
+        print("\nListe des joueurs disponibles :")
+        for player in players:
+            print(f"- {player['first_name']} {player['last_name']} (ID: {player['chess_id']})")
+
+        selected_ids = input("\nEntrez les chess_id des joueurs (séparés par des virgules) : ").strip().split(',')
+
+        player_list = []
+        for chess_id in selected_ids:
+            chess_id = chess_id.strip()
+            player = next((p for p in players if p['chess_id'] == chess_id), None)
+            if player:
+                player_list.append(player)
+            else:
+                print(f"Joueur avec l'ID {chess_id} introuvable.")
+
+        print("\nJoueurs sélectionnés :")
+        for player in player_list:
+            print(f"- {player['first_name']} {player['last_name']} (ID: {player['chess_id']})")
+
+        return player_list

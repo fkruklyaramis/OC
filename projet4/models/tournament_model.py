@@ -8,8 +8,8 @@ class Tournament(BaseModel):
     startDate: str
     endDate: str
     roundNumber: int = Field(default=4)
-    roundId: Optional[int]
-    roundList: Optional[list]
+    roundId: Optional[int] = Field(default=None)
+    roundList: Optional[list] = Field(default=None)
     playerList: list
     description: str
 
