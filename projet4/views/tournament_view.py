@@ -1,7 +1,7 @@
-from views.view import View
+from views.interface_view import InterfaceView
 
 
-class TournamentView(View):
+class TournamentView(InterfaceView):
 
     def __init__(self):
         super().__init__()

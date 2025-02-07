@@ -1,11 +1,12 @@
 import os
 
 
-class View():
+class InterfaceView():
     def __init__(self):
         self.choice_list = []
 
     def menu(self):
+        print("Bienvenue dans le gestionnaire de tournois")
         for value in self.choice_list:
             print(f"{value['value']} : {value['label']}")
         choice = int(input("Choisissez une option : "))

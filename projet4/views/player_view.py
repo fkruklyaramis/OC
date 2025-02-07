@@ -1,7 +1,7 @@
-from views.view import View
+from views.interface_view import InterfaceView
 
 
-class PlayerView(View):
+class PlayerView(InterfaceView):
 
     def get_player_details(self):
         print("Ajout d'un joueur :")
