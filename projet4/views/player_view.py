@@ -1,6 +1,7 @@
+from views.view import View
 
 
-class PlayerView:
+class PlayerView(View):
 
     def get_player_details(self):
         print("Ajout d'un joueur :")
@@ -16,9 +17,3 @@ class PlayerView:
         for player in players:
             print(f"{player['chess_id']} - {player['last_name']} {player['first_name']} "
                   f"{player['birth_date']}")
-
-    def menu(self, choice_list: list[dict]):
-        for value in choice_list:
-            print(f"{value['value']} : {value['label']}")
-        choice = int(input("Choisissez une option : "))
-        return choice

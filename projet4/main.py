@@ -5,7 +5,6 @@ from controllers.tournament_controller import TournamentController
 
 def main():
     while True:
-        print("Bienvenue dans le gestionnaire de tournois d'échecs !")
         main_view = TournamentView()
         TournamentController(main_view).manage_tournament()
 
