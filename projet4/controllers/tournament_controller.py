@@ -3,6 +3,8 @@ from models.tournament_model import Tournament
 from views.tournament_view import TournamentView
 from views.player_view import PlayerView
 from controllers.player_controller import PlayerController
+from controllers.round_controller import RoundController
+from views.round_view import RoundView
 
 
 class TournamentController:
@@ -14,6 +16,7 @@ class TournamentController:
                                  {'value': 2, 'label': 'Gestion des joueurs', 'callback': self.manage_players},
                                  {'value': 3, 'label': 'Quitter', 'callback': exit}]
         self.view.set_choice_list(self.menu_choice_list)
+        self.current_tournament = None
 
     def manage_tournament(self):
         choice = self.view.menu()
@@ -30,9 +33,13 @@ class TournamentController:
         players = PlayerController(PlayerView()).load_players()
         self.view.set_players_list(players)
         data = self.view.get_tournament_details()
-        tournament = Tournament(**data)
-        self.save_tournament(tournament)
+        self.current_tournament = Tournament(**data)
+        self.save_tournament(self.current_tournament)
         print("Le tournoi est lancé !")
+        self.start_rounds()
+
+    def start_rounds(self):
+        RoundController(RoundView(), self.current_tournament).manage_rounds()
 
     def save_tournament(self, tournament: Tournament):
         try:

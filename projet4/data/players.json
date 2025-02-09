@@ -1,14 +1,26 @@
 [
     {
-        "last_name": "zz",
-        "first_name": "zz",
-        "birth_date": "zz",
-        "chess_id": "zz"
+        "last_name": "Lanvin",
+        "first_name": "G\u00e9rard",
+        "birth_date": "1965-01-01",
+        "chess_id": "GL1965"
     },
     {
-        "last_name": "aa",
-        "first_name": "aa",
-        "birth_date": "aa",
-        "chess_id": "aa"
+        "last_name": "Chabat",
+        "first_name": "Alain",
+        "birth_date": "1960-01-01",
+        "chess_id": "CA1960"
+    },
+    {
+        "last_name": "Carlsen",
+        "first_name": "Magnus",
+        "birth_date": "1990-01-01",
+        "chess_id": "CM1990"
+    },
+    {
+        "last_name": "Kasparov",
+        "first_name": "Garry",
+        "birth_date": "1980-01-01",
+        "chess_id": "KG1980"
     }
 ]
