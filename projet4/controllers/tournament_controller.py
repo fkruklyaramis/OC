@@ -39,11 +39,14 @@ class TournamentController:
 
     def start_rounds(self):
         return RoundController(RoundView(), self.current_tournament).manage_rounds()
-
-    def save_tournament(self, tournament: Tournament):
+    
+    def save_tournament(self, tournament):
         try:
             with open(self.tournaments_file, "r") as file:
-                tournaments = json.load(file)
+                try:
+                    tournaments = json.load(file)
+                except json.JSONDecodeError:
+                    tournaments = []
         except FileNotFoundError:
             tournaments = []
 

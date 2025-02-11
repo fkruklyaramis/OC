@@ -12,6 +12,11 @@ class RoundController:
     MATCH_WIN_SCORE = 1.0
     MATCH_LOOSE_SCORE = 0.0
     MATCH_RESULT_CHOICE_LIST = [0, 1, 2]
+    SCORE_MAPPING = {
+        0: (MATCH_NULL_SCORE, MATCH_NULL_SCORE),
+        1: (MATCH_WIN_SCORE, MATCH_LOOSE_SCORE),
+        2: (MATCH_LOOSE_SCORE, MATCH_WIN_SCORE)
+    }
 
     def __init__(self, view: RoundView, tournament: Tournament):
         self.view = RoundView()
@@ -40,15 +45,9 @@ class RoundController:
                                        f"Player 2 : {player2_selected['first_name']} {player2_selected['last_name']}"
                                        f"\nWho is the winner ? 0 (if null), 1 or 2 : ").strip())
                     if winner in self.MATCH_RESULT_CHOICE_LIST:
-                        if winner == self.MATCH_RESULT_CHOICE_LIST[0]:
-                            player1 = (player1_selected['chess_id'], float(self.MATCH_NULL_SCORE))
-                            player2 = (player2_selected['chess_id'], float(self.MATCH_NULL_SCORE))
-                        elif winner == self.MATCH_RESULT_CHOICE_LIST[1]:
-                            player1 = (player1_selected['chess_id'], float(self.MATCH_WIN_SCORE))
-                            player2 = (player2_selected['chess_id'], float(self.MATCH_LOOSE_SCORE))
-                        elif winner == self.MATCH_RESULT_CHOICE_LIST[2]:
-                            player1 = (player1_selected['chess_id'], float(self.MATCH_LOOSE_SCORE))
-                            player2 = (player2_selected['chess_id'], float(self.MATCH_WIN_SCORE))
+                        player1_score, player2_score = self.SCORE_MAPPING[winner]
+                        player1 = (player1_selected['chess_id'], float(player1_score))
+                        player2 = (player2_selected['chess_id'], float(player2_score))
                     else:
                         print("invalid input : fill 0 (if null), 1 or 2")
 
@@ -63,7 +62,7 @@ class RoundController:
                 )
 
             round.endDate = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            rounds.append(round)
+            rounds.append(round.to_dict())
         print("Rounds finished, here are the results : ")
         print(rounds)
         return rounds
