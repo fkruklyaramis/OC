@@ -34,12 +34,11 @@ class TournamentController:
         self.view.set_players_list(players)
         data = self.view.get_tournament_details()
         self.current_tournament = Tournament(**data)
+        self.current_tournament.roundList = self.start_rounds()
         self.save_tournament(self.current_tournament)
-        print("Le tournoi est lancé !")
-        self.start_rounds()
 
     def start_rounds(self):
-        RoundController(RoundView(), self.current_tournament).manage_rounds()
+        return RoundController(RoundView(), self.current_tournament).manage_rounds()
 
     def save_tournament(self, tournament: Tournament):
         try:
