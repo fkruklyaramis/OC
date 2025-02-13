@@ -11,7 +11,6 @@ class RoundController:
     MATCH_NULL_SCORE = 0.5
     MATCH_WIN_SCORE = 1.0
     MATCH_LOOSE_SCORE = 0.0
-    MATCH_RESULT_CHOICE_LIST = [0, 1, 2]
     SCORE_MAPPING = {
         0: (MATCH_NULL_SCORE, MATCH_NULL_SCORE),
         1: (MATCH_WIN_SCORE, MATCH_LOOSE_SCORE),
@@ -22,7 +21,7 @@ class RoundController:
         self.view = RoundView()
         self.tournament = tournament
 
-    def manage_rounds(self):
+    def manage_rounds(self) -> list:
         rounds = []
         for i in range(1, self.tournament.roundNumber + 1):
             print(f"Round {i} started")
@@ -39,12 +38,12 @@ class RoundController:
                 player2 = (player2_selected['chess_id'], 0.0)
 
                 winner = None
-                while winner not in self.MATCH_RESULT_CHOICE_LIST:
+                while winner not in self.SCORE_MAPPING:
                     winner = int(input(f"Player 1 : {player1_selected['first_name']} {player1_selected['last_name']}"
                                        f" VS "
                                        f"Player 2 : {player2_selected['first_name']} {player2_selected['last_name']}"
                                        f"\nWho is the winner ? 0 (if null), 1 or 2 : ").strip())
-                    if winner in self.MATCH_RESULT_CHOICE_LIST:
+                    if winner in self.SCORE_MAPPING:
                         player1_score, player2_score = self.SCORE_MAPPING[winner]
                         player1 = (player1_selected['chess_id'], float(player1_score))
                         player2 = (player2_selected['chess_id'], float(player2_score))
@@ -58,13 +57,12 @@ class RoundController:
             round = Round(
                 number=i,
                 name=f"Round {i}",
-                matchList=[match]
+                matchList=[match.model_dump()]
                 )
 
             round.endDate = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            rounds.append(round.to_dict())
-        print("Rounds finished, here are the results : ")
-        print(rounds)
+            rounds.append(round.model_dump())
+        print("Rounds finished!")
         return rounds
 
     def new_match(self, player1: Tuple[str, float], player2: Tuple[str, float]):

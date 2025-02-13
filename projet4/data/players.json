@@ -22,5 +22,41 @@
         "first_name": "Garry",
         "birth_date": "1980-01-01",
         "chess_id": "KG1980"
+    },
+    {
+        "last_name": "Jean",
+        "first_name": "Luc",
+        "birth_date": "1975-01-01",
+        "chess_id": "JL1975"
+    },
+    {
+        "last_name": "Jacques",
+        "first_name": "Martin",
+        "birth_date": "1982-01-01",
+        "chess_id": "JM1982"
+    },
+    {
+        "last_name": "Obispo",
+        "first_name": "Pascal",
+        "birth_date": "1987-01-01",
+        "chess_id": "PO1987"
+    },
+    {
+        "last_name": "Musk",
+        "first_name": "Elon",
+        "birth_date": "1984-01-01",
+        "chess_id": "EM1984"
+    },
+    {
+        "last_name": "Macron",
+        "first_name": "Emmanuel",
+        "birth_date": "1979-01-01",
+        "chess_id": "EM1979"
+    },
+    {
+        "last_name": "Zidane",
+        "first_name": "Zinedine",
+        "birth_date": "1973-01-01",
+        "chess_id": "ZZ1973"
     }
 ]

@@ -37,9 +37,9 @@ class TournamentController:
         self.current_tournament.roundList = self.start_rounds()
         self.save_tournament(self.current_tournament)
 
-    def start_rounds(self):
+    def start_rounds(self) -> list:
         return RoundController(RoundView(), self.current_tournament).manage_rounds()
-    
+
     def save_tournament(self, tournament):
         try:
             with open(self.tournaments_file, "r") as file:
