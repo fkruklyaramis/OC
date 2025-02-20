@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import List
 
 
 class Round(BaseModel):
     number: int
     name: str = None
-    matchList: list = []
+    matchList: List = []
     startDate: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     endDate: str = None
 

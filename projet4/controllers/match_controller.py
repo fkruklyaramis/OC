@@ -1,14 +1,17 @@
 from models.match_model import Match
-from typing import Tuple
+from models.player_model import Player
+from views.match_view import MatchView
 
 
 class MatchController:
-    def __init__(self, tournament):
+    def __init__(self, tournament, player1: Player, player2: Player):
         self.tournament = tournament
-
-    def manage_matches(self, player1: Tuple[str, float], player2: Tuple[str, float]):
-        new_match = Match(
-            match=([player1], [player2])
+        self.view = MatchView
+        self.match = Match(
+            match=([player1, 0], [player2, 0])
         )
-        print(f"Match créé avec succès : {new_match}")
-        return new_match
+
+    def play_match(self):
+        result = self.view.play_match(self.match)
+        self.match.match[0][1] = result[0]
+        self.match.match[1][1] = result[1]

@@ -1,73 +1,44 @@
 from views.round_view import RoundView
 from models.round_model import Round
 from models.tournament_model import Tournament
+from models.player_model import Player
 from controllers.match_controller import MatchController
-from typing import Tuple
 from datetime import datetime
 import random
 
 
 class RoundController:
-    MATCH_NULL_SCORE = 0.5
-    MATCH_WIN_SCORE = 1.0
-    MATCH_LOOSE_SCORE = 0.0
-    SCORE_MAPPING = {
-        0: (MATCH_NULL_SCORE, MATCH_NULL_SCORE),
-        1: (MATCH_WIN_SCORE, MATCH_LOOSE_SCORE),
-        2: (MATCH_LOOSE_SCORE, MATCH_WIN_SCORE)
-    }
 
-    def __init__(self, view: RoundView, tournament: Tournament):
-        self.view = RoundView()
+    def __init__(self, tournament: Tournament, round_number: int):
+        self.round = Round(number=round_number)
+        self.view = RoundView(self.round)
         self.tournament = tournament
 
-    def manage_rounds(self) -> list:
-        rounds = []
-        for i in range(1, self.tournament.roundNumber + 1):
-            print(f"Round {i} started")
-            if i == 1:
-                players = self.tournament.playerList.copy()
-                random.shuffle(players)
-            else:
-                players = self.tournament.playerList
-            if len(players) >= 2:
-                # call here pair_players method
-                player1_selected = players[0]
-                player2_selected = players[1]
-                player1 = (player1_selected['chess_id'], 0.0)
-                player2 = (player2_selected['chess_id'], 0.0)
+    def manage_round(self):
+        self.view.start_round()
+        players = []
+        if self.round.number == 1:
+            players = self.tournament.playerList.copy()
+            random.shuffle(players)
+        else:
+            # call here pair_players method
+            players = self.tournament.playerList
+        self.start_matches(players)
+        self.round.endDate = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        return self.round.model_dump()
 
-                winner = None
-                while winner not in self.SCORE_MAPPING:
-                    winner = int(input(f"Player 1 : {player1_selected['first_name']} {player1_selected['last_name']}"
-                                       f" VS "
-                                       f"Player 2 : {player2_selected['first_name']} {player2_selected['last_name']}"
-                                       f"\nWho is the winner ? 0 (if null), 1 or 2 : ").strip())
-                    if winner in self.SCORE_MAPPING:
-                        player1_score, player2_score = self.SCORE_MAPPING[winner]
-                        player1 = (player1_selected['chess_id'], float(player1_score))
-                        player2 = (player2_selected['chess_id'], float(player2_score))
-                    else:
-                        print("invalid input : fill 0 (if null), 1 or 2")
-
-            else:
-                print("Not enough players to start a match")
-                break
+    def start_matches(self, players: list):
+        for i in range(self.match_count()):
+            print(f"Match {i + 1} sur {self.match_count()}")
+            player1 = players.pop()
+            player2 = players.pop()
             match = self.new_match(player1, player2)
-            round = Round(
-                number=i,
-                name=f"Round {i}",
-                matchList=[match.model_dump()]
-                )
+            match.play_match()
 
-            round.endDate = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            rounds.append(round.model_dump())
-        print("Rounds finished!")
-        return rounds
-
-    def new_match(self, player1: Tuple[str, float], player2: Tuple[str, float]):
-        match_controller = MatchController(self.tournament)
-        return match_controller.manage_matches(player1, player2)
+    def new_match(self, player1: Player, player2: Player) -> MatchController:
+        match_controller = MatchController(self.tournament, player1, player2)
+        self.round.matchList.append(match_controller)
+        return match_controller
 
     def pair_players(self):
         # Triez tous les joueurs en fonction de leur nombre total de points dans le tournoi.
@@ -77,3 +48,6 @@ class RoundController:
         # (c’est-à-dire les mêmes joueurs jouant plusieurs fois l’un contre l’autre).
         # Par exemple, si le joueur 1 a déjà joué contre le joueur 2,associez-le plutôt au joueur 3.
         pass
+
+    def match_count(self) -> int:
+        return int((len(self.tournament.playerList) + 1) / 2)

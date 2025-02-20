@@ -4,7 +4,6 @@ from views.tournament_view import TournamentView
 from views.player_view import PlayerView
 from controllers.player_controller import PlayerController
 from controllers.round_controller import RoundController
-from views.round_view import RoundView
 
 
 class TournamentController:
@@ -38,7 +37,12 @@ class TournamentController:
         self.save_tournament(self.current_tournament)
 
     def start_rounds(self) -> list:
-        return RoundController(RoundView(), self.current_tournament).manage_rounds()
+        rounds = []
+        for i in range(1, self.current_tournament.roundNumber + 1):
+            round_controller = RoundController(self.current_tournament, i)
+            round_data = round_controller.manage_round()
+            rounds.append(round_data)
+        return rounds
 
     def save_tournament(self, tournament):
         try:
