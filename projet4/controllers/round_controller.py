@@ -11,6 +11,7 @@ class RoundController:
 
     def __init__(self, tournament: Tournament, round_number: int):
         self.round = Round(number=round_number)
+        self.round.name = f"Round {round_number}"
         self.view = RoundView(self.round)
         self.tournament = tournament
 
@@ -28,16 +29,29 @@ class RoundController:
         return self.round.model_dump()
 
     def start_matches(self, players: list):
-        for i in range(self.match_count()):
-            print(f"Match {i + 1} sur {self.match_count()}")
-            player1 = players.pop()
-            player2 = players.pop()
+        print(f"Nombre de joueur dans le tournoi {len(self.tournament.playerList)}")
+        match_count = self.match_count()
+        available_indices = list(range(len(players)))
+        for i in range(match_count):
+            print(f"Match {i + 1} sur {match_count}")
+
+            # Select first player
+            index1 = random.choice(available_indices)
+            available_indices.remove(index1)
+            player1 = players[index1]
+
+            # Select second player
+            index2 = random.choice(available_indices)
+            available_indices.remove(index2)
+            player2 = players[index2]
+
             match = self.new_match(player1, player2)
-            match.play_match()
+            result = match.play_match()
+            self.round.matchList[-1] = result
 
     def new_match(self, player1: Player, player2: Player) -> MatchController:
         match_controller = MatchController(self.tournament, player1, player2)
-        self.round.matchList.append(match_controller)
+        self.round.matchList.append(match_controller.match.model_dump())
         return match_controller
 
     def pair_players(self):

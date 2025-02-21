@@ -15,3 +15,4 @@ class MatchController:
         result = self.view.play_match(self.match)
         self.match.match[0][1] = result[0]
         self.match.match[1][1] = result[1]
+        return self.match.model_dump()
