@@ -31,32 +31,63 @@ class TournamentController:
     def add_tournament(self):
         players = PlayerController(PlayerView()).load_players()
         self.view.set_players_list(players)
-        data = self.view.get_tournament_details()
-        self.current_tournament = Tournament(**data)
+        tournament_data = self.view.get_tournament_details()
+        self.current_tournament = Tournament(**tournament_data)
         self.current_tournament.roundList = self.start_rounds()
         self.save_tournament(self.current_tournament)
 
     def start_rounds(self) -> list:
         rounds = []
+        players = self.current_tournament.playerList
         for i in range(1, self.current_tournament.roundNumber + 1):
             round_controller = RoundController(self.current_tournament, i)
             round_data = round_controller.manage_round()
             rounds.append(round_data)
+            self.current_tournament.playerList = players
         return rounds
 
-    def save_tournament(self, tournament):
+    def save_tournament(self, tournament: Tournament):
+        # Load existing tournaments
+        tournaments = []
         try:
-            with open(self.tournaments_file, "r") as file:
-                try:
-                    tournaments = json.load(file)
-                except json.JSONDecodeError:
-                    tournaments = []
-        except FileNotFoundError:
+            with open(self.tournaments_file, 'r') as file:
+                tournaments = json.load(file)
+        except (FileNotFoundError, json.JSONDecodeError):
             tournaments = []
 
-        tournaments.append(tournament.to_dict())
+        # Convert tournament to dict and handle Player objects
+        tournament_dict = tournament.model_dump()
 
-        with open(self.tournaments_file, "w") as file:
+        # Convert Player objects in playerList to dicts
+        tournament_dict['playerList'] = [
+            player.model_dump() if hasattr(player, 'model_dump')
+            else player
+            for player in tournament_dict['playerList']
+        ]
+
+        # Convert Player objects in matchList
+        for round_data in tournament_dict.get('roundList', []):
+            for match in round_data.get('matchList', []):
+                match_data = match.get('match', [])
+                if match_data:
+                    # Convert players in match data
+                    player1 = match_data[0][0]
+                    match_data[0][0] = player1.model_dump() if hasattr(player1, 'model_dump') else player1
+                    # possible to reduce the datas stored in the match data by this following code
+                    """
+                    match_data[0][0] = {
+                        'last_name': player1['last_name'],
+                        'first_name': player1['first_name']
+                    }
+                    """
+                    player2 = match_data[1][0]
+                    match_data[1][0] = player2.model_dump() if hasattr(player2, 'model_dump') else player2
+
+        # Add the tournament to the list
+        tournaments.append(tournament_dict)
+
+        # Save back to file
+        with open(self.tournaments_file, 'w') as file:
             json.dump(tournaments, file, indent=4)
 
     def load_tournaments(self):

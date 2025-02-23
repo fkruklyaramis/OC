@@ -20,6 +20,11 @@ class MatchView():
                 scores = match_model.SCORE_MAPPING[result]
                 self.match[0][1] = scores[0]
                 self.match[1][1] = scores[1]
+                player1.point += scores[0]
+                player2.point += scores[1]
+                print("Match result:")
+                print(f"{player1.first_name} {player1.last_name} : +{scores[0]} point(s) (Total: {player1.point})")
+                print(f"{player2.first_name} {player2.last_name}: +{scores[1]} point(s) (Total: {player2.point})")
                 return scores
             else:
                 print("invalid input : fill 0 (if null), 1 or 2")
