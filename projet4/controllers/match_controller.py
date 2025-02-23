@@ -11,8 +11,18 @@ class MatchController:
             match=([player1, 0], [player2, 0])
         )
 
-    def play_match(self):
-        result = self.view.play_match(self.match)
+    def play_match(self, match_number: int, total_matches: int):
+        """
+        Executes the match play process and updates the match results.
+        This method coordinates with the view to get match results and updates
+        the match model with the scores. The scores are stored at specific indexes
+        in the match data structure.
+        Returns:
+            dict: A dictionary containing the match data after updating the results
+        """
+
+        match_view = self.view(self.match.match)
+        result = match_view.play_match(match_number, total_matches)
         self.match.match[0][1] = result[0]
         self.match.match[1][1] = result[1]
         return self.match.model_dump()

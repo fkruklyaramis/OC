@@ -20,7 +20,7 @@ projet4/
 ├── models/         # Modèles de données
 ├── views/          # Interface utilisateur
 ├── data/          # Stockage des données
-└── utils/         # Utilitaires
+└── main.py        # Point d'entrée de l'application
 ```
 
 ## Méthode de déploiement
@@ -28,6 +28,9 @@ projet4/
 ### Prérequis
 - Python 3.8 ou supérieur
 - pip (gestionnaire de paquets Python)
+
+### Dépendances principales
+- pydantic 2.5.3 - Validation des données et sérialisation
 
 ### Installation
 
