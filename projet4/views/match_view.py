@@ -3,8 +3,9 @@ import models.match_model as match_model
 
 
 class MatchView():
-    def __init__(self, match_data: tuple):
+    def __init__(self, match_data: tuple, colors: dict):
         self.match = match_data
+        self.colors = colors
 
     def play_match(self, match_number: int, total_matches: int):
         """
@@ -23,9 +24,9 @@ class MatchView():
         print(f"\nMatch {match_number} of {total_matches}")
 
         while result not in match_model.SCORE_MAPPING:
-            result = int(input(f"Player 1 : {player1.first_name} {player1.last_name}"
+            result = int(input(f"Player 1 : {player1.first_name} {player1.last_name} ({self.colors['player1_color']})"
                                f" VS "
-                               f"Player 2 : {player2.first_name} {player2.last_name}"
+                               f"Player 2 : {player2.first_name} {player2.last_name} ({self.colors['player2_color']})"
                                f"\nWho is the winner ? 0 (if null), 1 or 2 : ").strip())
             if result in match_model.SCORE_MAPPING:
                 scores = match_model.SCORE_MAPPING[result]

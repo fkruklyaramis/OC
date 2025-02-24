@@ -128,7 +128,7 @@ class RoundController:
             if player1.chess_id in used_players_ids:
                 continue
 
-            # Recherche d'un adversaire pour player1
+            # search for a player to pair with player1
             for player2 in sorted_players:
                 if (player2.chess_id not in used_players_ids and player1.chess_id != player2.chess_id
                    and not self.have_played_together(player1, player2)):
