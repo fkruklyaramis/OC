@@ -48,7 +48,7 @@ class PlayerController(DataManager):
         player = Player(**data)
         # call save_player from datamanager
         self.save_player(player.to_dict())
-        print("Player added successfully!")
+        self.view.show_message("Player added successfully!")
 
     def list_players(self):
         """

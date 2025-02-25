@@ -40,3 +40,7 @@ class PlayerView(InterfaceView):
         for player in players:
             print(f"{player['chess_id']} - {player['last_name']} {player['first_name']} "
                   f"{player['birth_date']}")
+
+    def show_message(self, message: str):
+        """Display a message to the user"""
+        print(f"\n{message}")
