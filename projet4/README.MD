@@ -49,31 +49,50 @@ pip install -r requirements.txt
 ```
 
 ## Project Structure
-```
-projet4/
-├── controllers/          # Application logic
-│   ├── interface_controller.py
-│   ├── player_controller.py
-│   ├── report_controller.py
-│   └── tournament_controller.py
-├── models/              # Data structures and business logic
-│   ├── data_manager.py
-│   ├── player.py
-│   └── tournament.py
-├── views/              # User interface
-│   ├── interface_view.py
-│   ├── player_view.py
-│   ├── report_view.py
-│   └── tournament_view.py
-├── templates/          # HTML templates for reports
-│   ├── players_list.html
-│   ├── tournaments_list.html
-│   ├── tournament_details.html
-│   └── tournament_rounds.html
-├── data/              # JSON data storage
-│   ├── players.json
-│   └── tournaments.json
-└── main.py            # Application entry point
+```mermaid
+graph TD
+    A[projet4] --> B[controllers]
+    A --> C[models]
+    A --> D[views]
+    A --> E[templates]
+    A --> F[data]
+    A --> G[main.py]
+
+    B --> B1[interface_controller.py]
+    B --> B2[player_controller.py]
+    B --> B3[report_controller.py]
+    B --> B4[tournament_controller.py]
+    B --> B5[match_controller.py]
+    B --> B6[round_controller.py]
+
+    C --> C1[data_manager_model.py]
+    C --> C2[player_model.py]
+    C --> C3[tournament_model.py]
+    C --> C4[match_model.py]
+    C --> C5[round_model.py]
+
+    D --> D1[interface_view.py]
+    D --> D2[player_view.py]
+    D --> D3[report_view.py]
+    D --> D4[tournament_view.py]
+    D --> D5[match_view.py]
+    D --> D6[round_view.py]
+
+    E --> E1[players_list.html]
+    E --> E2[tournaments_list.html]
+    E --> E3[tournament_details.html]
+    E --> E4[tournament_rounds.html]
+    E --> E5[tournament_players.html]
+
+    F --> F1[players.json]
+    F --> F2[tournaments.json]
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#bbf,stroke:#333
+    style C fill:#bfb,stroke:#333
+    style D fill:#fbb,stroke:#333
+    style E fill:#ffb,stroke:#333
+    style F fill:#bff,stroke:#333
 ```
 
 ## Usage
