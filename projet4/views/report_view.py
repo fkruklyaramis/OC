@@ -174,7 +174,7 @@ class ReportView(InterfaceView):
             if tournament_name:
                 print(f"\n=== Rounds and Matches in {tournament_name} ===")
                 for round_data in rounds:
-                    print(f"\nRound: {round_data['roundNumber']}")
+                    print(f"\nRound: {round_data['number']}")
                     print(f"Started: {round_data['startDate']}")
                     print(f"Ended: {round_data['endDate']}")
                     print("Matches:")
