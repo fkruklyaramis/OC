@@ -24,7 +24,6 @@ class PlayerView(InterfaceView):
         first_name = input("First name : ")
         birth_date = input("Birth date (YYYY-MM-DD) : ")
         chess_id = input("Chess id : ")
-        # créer l'objet ici et le retourner
         return {"last_name": last_name, "first_name": first_name, "birth_date": birth_date, "chess_id": chess_id}
 
     def display_players(self, players):

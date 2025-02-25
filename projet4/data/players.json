@@ -58,5 +58,11 @@
         "first_name": "Zinedine",
         "birth_date": "1973-01-01",
         "chess_id": "ZZ1973"
+    },
+    {
+        "last_name": "TEST",
+        "first_name": "TEST",
+        "birth_date": "TEST",
+        "chess_id": "TEST"
     }
 ]

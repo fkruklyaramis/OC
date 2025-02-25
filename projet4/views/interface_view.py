@@ -14,10 +14,10 @@ class InterfaceView():
             int: The numeric value corresponding to the user's menu selection
         """
 
-        print("Welcome to the tournament manager!")
         for value in self.choice_list:
             print(f"{value['value']} : {value['label']}")
         choice = int(input("Choose an option : "))
+
         os.system('cls' if os.name == 'nt' else 'clear')
         return choice
 

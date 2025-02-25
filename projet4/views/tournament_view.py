@@ -6,6 +6,7 @@ class TournamentView(InterfaceView):
     def __init__(self):
         super().__init__()
         self.players = []
+        print("Welcome to the tournament manager!")
 
     def set_players_list(self, players):
         """

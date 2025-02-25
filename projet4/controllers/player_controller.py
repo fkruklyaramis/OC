@@ -1,11 +1,12 @@
-import json
 from models.player_model import Player
 from views.player_view import PlayerView
+from models.data_manager import DataManager
 
 
-class PlayerController():
+class PlayerController(DataManager):
 
     def __init__(self, view: PlayerView):
+        super().__init__()
         self.view = view
         self.players_file = "./data/players.json"
         self.menu_choice_list = [{'value': 1, 'label': 'Add a player', 'callback': self.add_player},
@@ -28,10 +29,8 @@ class PlayerController():
 
         choice = self.view.menu()
         menu_choice = next((item for item in self.menu_choice_list if item['value'] == choice), None)
-        if menu_choice and 'callback' in menu_choice:
+        if menu_choice and menu_choice['callback'] is not None:
             menu_choice['callback']()
-        else:
-            None
 
     def add_player(self):
         """
@@ -47,7 +46,8 @@ class PlayerController():
 
         data = self.view.get_player_details()
         player = Player(**data)
-        self.save_player(player)
+        # call save_player from datamanager
+        self.save_player(player.to_dict())
         print("Player added successfully!")
 
     def list_players(self):
@@ -59,42 +59,6 @@ class PlayerController():
         Side Effects:
             - Displays a list of all players to the console
         """
+        # call load_players from datamanager
         players = self.load_players()
         self.view.display_players(players)
-
-    def save_player(self, player: Player):
-        """
-        Save a player to the database.
-        This method loads the current list of players from the database, adds the new player,
-        and writes the updated list back to the database.
-        Args:
-            player (Player): The player instance to save
-        Returns:
-            None
-        Side Effects:
-            - Updates the players database file
-        """
-        try:
-            with open(self.players_file, "r") as file:
-                players = json.load(file)
-        except FileNotFoundError:
-            players = []
-
-        players.append(player.to_dict())
-
-        with open(self.players_file, "w") as file:
-            json.dump(players, file, indent=4)
-
-    def load_players(self):
-        """
-        Load all players from the database.
-        This method reads the list of players from the database file.
-        Returns:
-            list: A list of player dictionaries
-        """
-
-        try:
-            with open(self.players_file, "r") as file:
-                return json.load(file)
-        except FileNotFoundError:
-            return []

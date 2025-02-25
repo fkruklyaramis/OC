@@ -1,21 +1,30 @@
-import json
 from models.tournament_model import Tournament
+from models.data_manager import DataManager
 from views.tournament_view import TournamentView
 from views.player_view import PlayerView
+from views.report_view import ReportView
 from controllers.player_controller import PlayerController
 from controllers.round_controller import RoundController
+from controllers.report_controller import ReportController
 
 
-class TournamentController:
+class TournamentController(DataManager):
 
     def __init__(self, view: TournamentView):
+        super().__init__()
         self.view = view
         self.tournaments_file = "./data/tournaments.json"
         self.menu_choice_list = [{'value': 1, 'label': 'Start a tournament', 'callback': self.add_tournament},
                                  {'value': 2, 'label': 'Manage players', 'callback': self.manage_players},
-                                 {'value': 3, 'label': 'Quit', 'callback': exit}]
+                                 {'value': 3, 'label': 'View reports', 'callback': self.view_reports},
+                                 {'value': 4, 'label': 'Quit', 'callback': exit}]
         self.view.set_choice_list(self.menu_choice_list)
         self.current_tournament = None
+
+    def view_reports(self):
+        report_view = ReportView()
+        report_controller = ReportController(report_view)
+        report_controller.manage_reports()
 
     def manage_tournament(self):
         """
@@ -68,7 +77,7 @@ class TournamentController:
         tournament_data = self.view.get_tournament_details()
         self.current_tournament = Tournament(**tournament_data)
         self.current_tournament.roundList = self.start_rounds()
-        self.save_tournament(self.current_tournament)
+        self.saving_tournament(self.current_tournament)
 
     def start_rounds(self) -> list:
         """
@@ -111,71 +120,39 @@ class TournamentController:
             self.current_tournament.playerList = players
         return rounds
 
-    def save_tournament(self, tournament: Tournament):
+    def saving_tournament(self, tournament):
         """
-        Save a tournament to the database.
-        This method loads the current list of tournaments from the database, adds the new tournament,
-        and writes the updated list back to the database.
+        Save a tournament to storage by converting it to a dictionary format.
+
+        This method processes a tournament object and converts it into a dictionary format
+        suitable for storage, handling nested player objects and match data.
+
         Args:
-            tournament (Tournament): The tournament instance to save
+            tournament: A Tournament object containing all tournament information including
+                       players, rounds, and matches.
+
         Returns:
             None
-        Side Effects:
-            - Updates the tournaments database file
-        """
-        # Load existing tournaments
-        tournaments = []
-        try:
-            with open(self.tournaments_file, 'r') as file:
-                tournaments = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            tournaments = []
 
-        # Convert tournament to dict and handle Player objects
+        Notes:
+            - Converts player objects to dictionaries using model_dump() if available
+            - Processes nested match data to ensure proper serialization
+            - Uses the data manager's save_tournament method for actual storage
+        """
+
         tournament_dict = tournament.model_dump()
 
-        # Convert Player objects in playerList to dicts
         tournament_dict['playerList'] = [
-            player.model_dump() if hasattr(player, 'model_dump')
-            else player
+            player.model_dump() if hasattr(player, 'model_dump') else player
             for player in tournament_dict['playerList']
         ]
 
-        # Convert Player objects in matchList
         for round_data in tournament_dict.get('roundList', []):
             for match in round_data.get('matchList', []):
                 match_data = match.get('match', [])
                 if match_data:
-                    # Convert players in match data
-                    player1 = match_data[0][0]
-                    match_data[0][0] = player1.model_dump() if hasattr(player1, 'model_dump') else player1
-                    # possible to reduce the datas stored in the match data by this following code
-                    """
-                    match_data[0][0] = {
-                        'last_name': player1['last_name'],
-                        'first_name': player1['first_name']
-                    }
-                    """
-                    player2 = match_data[1][0]
-                    match_data[1][0] = player2.model_dump() if hasattr(player2, 'model_dump') else player2
+                    for i in range(2):  # Process both players in match
+                        player = match_data[i][0]
+                        match_data[i][0] = player.model_dump() if hasattr(player, 'model_dump') else player
 
-        # Add the tournament to the list
-        tournaments.append(tournament_dict)
-
-        # Save back to file
-        with open(self.tournaments_file, 'w') as file:
-            json.dump(tournaments, file, indent=4)
-
-    def load_tournaments(self):
-        """
-        Load all tournaments from the database.
-        This method reads the list of tournaments from the database file.
-        Returns:
-            list: A list of dictionaries containing tournament details
-        """
-
-        try:
-            with open(self.tournaments_file, "r") as file:
-                return json.load(file)
-        except FileNotFoundError:
-            return []
+        self.save_tournament(tournament_dict)
