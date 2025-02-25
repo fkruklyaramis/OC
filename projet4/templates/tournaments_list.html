@@ -2,7 +2,7 @@
     <h2>=== Tournament List (ranked by startDate) ===</h2>
     <ul>
     {% for tournament in tournaments %}
-        <li>• {{ tournament.name }}, {{ tournament.location }} ({{ tournament.startDate }}, {{ tournament.endDate }})</li>
+        <li>{{ tournament.name }}, {{ tournament.location }} ({{ tournament.startDate }}, {{ tournament.endDate }})</li>
     {% endfor %}
     </ul>
 </div>

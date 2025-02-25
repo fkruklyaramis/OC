@@ -3,7 +3,7 @@
     <h2>=== Players in {{ tournament_name }} ===</h2>
     <ul>
     {% for player in players %}
-        <li>• {{ player.last_name }}, {{ player.first_name }}</li>
+        <li>{{ player.last_name }}, {{ player.first_name }}</li>
     {% endfor %}
     </ul>
     {% else %}

@@ -2,7 +2,7 @@
     <h2>=== Players List (Alphabetical) ===</h2>
     <ul>
     {% for player in players %}
-        <li>• {{ player.last_name }}, {{ player.first_name }} (ID: {{ player.chess_id }})</li>
+        <li>{{ player.last_name }}, {{ player.first_name }} (ID: {{ player.chess_id }})</li>
     {% endfor %}
     </ul>
 </div>

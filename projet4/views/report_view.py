@@ -1,5 +1,7 @@
 from views.interface_view import InterfaceView
 from jinja2 import Environment, FileSystemLoader
+from rich.console import Console
+from rich.markdown import Markdown
 import os
 
 
@@ -8,6 +10,7 @@ class ReportView(InterfaceView):
         super().__init__()
         template_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates')
         self.env = Environment(loader=FileSystemLoader(template_dir))
+        self.console = Console()
         self.display_mode = self.choose_display_mode()
 
     def choose_display_mode(self) -> str:
@@ -21,12 +24,53 @@ class ReportView(InterfaceView):
 
         while True:
             print("\nChoose display mode:")
-            print("1. HTML format")
-            print("2. Console format")
+            print("1. Console HTML format")
+            print("2. Console text format")
             choice = input("Enter your choice (1 or 2): ").strip()
             if choice in ['1', '2']:
                 return 'html' if choice == '1' else 'console'
             print("Invalid choice. Please enter 1 or 2.")
+
+    def render_html(self, template_name: str, **kwargs):
+        """Render HTML template and convert it to markdown format for console display.
+        This method takes a template file and optional keyword arguments, renders it using
+        Jinja2 templating engine, and converts the HTML output to markdown format for
+        pretty console printing using Rich library.
+        Args:
+            template_name (str): Name of the template file to render
+            **kwargs: Variable keyword arguments to pass to the template renderer
+        Returns:
+            None: Prints the formatted markdown to console
+        Example:
+            render_html('tournament.html', tournament_name='Chess Cup 2023',
+                        players=['John', 'Jane'])
+        """
+
+        template = self.env.get_template(template_name)
+
+        template.environment.trim_blocks = True
+        template.environment.lstrip_blocks = True
+
+        html_content = template.render(**kwargs)
+        markdown = html_content.replace('<h2>', '## ') \
+            .replace('</h2>', '\n') \
+            .replace('<h3>', '### ') \
+            .replace('</h3>', '\n') \
+            .replace('<h4>', '#### ') \
+            .replace('</h4>', '\n') \
+            .replace('<ul>', '') \
+            .replace('</ul>', '') \
+            .replace('<li>', '* ') \
+            .replace('</li>', '') \
+            .replace('<p>', '') \
+            .replace('</p>', '\n') \
+            .replace('<div class="round">', '') \
+            .replace('</div>', '') \
+            .replace('<div class="tournament-rounds">', '') \
+            .replace('\n\n\n', '\n') \
+            .replace('\n\n', '\n') \
+            .replace('* * ', '* ')
+        self.console.print(Markdown(markdown.strip()))
 
     def show_players_list(self, players: list):
         """
@@ -43,8 +87,7 @@ class ReportView(InterfaceView):
         """
 
         if self.display_mode == 'html':
-            template = self.env.get_template('players_list.html')
-            print(template.render(players=players))
+            self.render_html('players_list.html', players=players)
         else:
             print("\n=== Players List (Alphabetical) ===")
             for player in players:
@@ -71,8 +114,7 @@ class ReportView(InterfaceView):
         """
 
         if self.display_mode == 'html':
-            template = self.env.get_template('tournaments_list.html')
-            print(template.render(tournaments=tournaments))
+            self.render_html('tournaments_list.html', tournaments=tournaments)
         else:
             print("\n=== Tournament List (ranked by startDate)===")
             for tournament in tournaments:
@@ -101,8 +143,7 @@ class ReportView(InterfaceView):
         """
 
         if self.display_mode == 'html':
-            template = self.env.get_template('tournament_details.html')
-            print(template.render(tournament=tournament))
+            self.render_html('tournament_details.html', tournament=tournament)
         else:
             if tournament:
                 print(f"\n=== Tournament Details: {tournament['name']} ===")
@@ -131,8 +172,7 @@ class ReportView(InterfaceView):
         """
 
         if self.display_mode == 'html':
-            template = self.env.get_template('tournament_players.html')
-            print(template.render(players=players, tournament_name=tournament_name))
+            self.render_html('tournament_players.html', players=players, tournament_name=tournament_name)
         else:
             if tournament_name:
                 print(f"\n=== Players in {tournament_name} ===")
@@ -168,8 +208,7 @@ class ReportView(InterfaceView):
         """
 
         if self.display_mode == 'html':
-            template = self.env.get_template('tournament_rounds.html')
-            print(template.render(rounds=rounds, tournament_name=tournament_name))
+            self.render_html('tournament_rounds.html', rounds=rounds, tournament_name=tournament_name)
         else:
             if tournament_name:
                 print(f"\n=== Rounds and Matches in {tournament_name} ===")
