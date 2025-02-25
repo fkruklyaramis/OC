@@ -11,11 +11,16 @@ class ReportController(DataManager):
         self.view = view
         self.player_controller = PlayerController(PlayerView())
         self.menu_choice_list = [
-            {'value': 1, 'label': 'Show all players (alphabetically)', 'callback': self.show_all_players},
-            {'value': 2, 'label': 'Show all tournaments', 'callback': self.show_all_tournaments},
-            {'value': 3, 'label': 'Show tournament by location', 'callback': self.show_tournament_by_location},
-            {'value': 4, 'label': 'Show tournament players', 'callback': self.show_tournament_players},
-            {'value': 5, 'label': 'Show tournament rounds and matches', 'callback': self.show_tournament_rounds},
+            {'value': 1, 'label': 'Show all players (alphabetically)', 'callback':
+             self.show_all_players},
+            {'value': 2, 'label': 'Show all tournaments', 'callback':
+             self.show_all_tournaments},
+            {'value': 3, 'label': 'Show tournament details by tournament name', 'callback':
+             self.show_tournament_by_location},
+            {'value': 4, 'label': 'Show tournament players by tournament name', 'callback':
+             self.show_tournament_players},
+            {'value': 5, 'label': 'Show tournament rounds and matches by tournament name', 'callback':
+             self.show_tournament_rounds},
             {'value': 6, 'label': 'Back to main menu', 'callback': None}
         ]
 
@@ -64,11 +69,64 @@ class ReportController(DataManager):
         sorted_tournaments = sorted(tournaments, key=lambda x: x['startDate'])
         self.view.show_all_tournaments(sorted_tournaments)
 
-    def show_tournament_by_location():
-        pass
+    def show_tournament_by_location(self):
+        """
+        Display details of a tournament based on its location.
+        This method prompts the user for a location, searches for a tournament in that location,
+        and displays its details if found.
+        Returns:
+        Notes:
+            - Calls view.get_tournament_location() to get location input from user
+            - Loads tournaments from storage
+            - Uses case-insensitive location matching
+            - If tournament is found, displays details via view.show_tournament_details()
+            - If no tournament is found, prints error message
+            - Returns to report management menu after completion
+        """
 
-    def show_tournament_players():
-        pass
+        name = self.view.get_tournament_name()
+        tournaments = self.load_tournaments()
+        tournament = next(
+            (t for t in tournaments if t['name'].lower() == name.lower()),
+            None
+        )
+        if tournament:
+            self.view.show_tournament_details(tournament)
+        else:
+            self.view.show_tournament_details(None)
 
-    def show_tournament_rounds():
-        pass
+        self.manage_reports()
+
+    def show_tournament_players(self):
+        name = self.view.get_tournament_name()
+        tournaments = self.load_tournaments()
+        tournament = next(
+            (t for t in tournaments if t['name'].lower() == name.lower()),
+            None
+        )
+
+        if tournament:
+            players = tournament['playerList']
+            sorted_players = sorted(
+                players,
+                key=lambda x: (x['last_name'].lower(), x['first_name'].lower())
+            )
+            self.view.show_tournament_players(sorted_players, tournament['name'])
+        else:
+            self.view.show_tournament_rounds(None, None)
+
+        self.manage_reports()
+
+    def show_tournament_rounds(self):
+        """Display rounds and matches of a tournament"""
+        name = self.view.get_tournament_name()
+        tournaments = self.load_tournaments()
+        tournament = next(
+            (t for t in tournaments if t['name'].lower() == name.lower()),
+            None
+        )
+        if tournament:
+            self.view.show_tournament_rounds(tournament['roundList'], tournament['name'])
+        else:
+            self.view.show_tournament_rounds(None, None)
+        self.manage_reports()
