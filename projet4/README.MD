@@ -132,6 +132,7 @@ The application uses JSON files for data persistence:
 - Python 3.8+
 - Jinja2: Template engine for HTML output
 - Rich: Console text formatting and styling
+- flake8-html: Generate PEP 8 validation HTML file
 
 ## Architecture
 This project follows the MVC (Model-View-Controller) pattern:
