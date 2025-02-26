@@ -145,3 +145,12 @@ This project follows the MVC (Model-View-Controller) pattern:
 - Implements MVC architecture
 - Uses JSON for data persistence
 - HTML templates for report generation
+
+## Code Quality
+The project follows PEP 8 style guide and passes Flake8 checks without errors. 
+View the [Flake8 HTML Report](flake8_report/index.html) for details.
+
+```bash
+# Generate Flake8 HTML report
+flake8 --format=html --htmldir=flake8_report ./controllers/*.py ./models/*.py ./views/*.py main.py
+```
