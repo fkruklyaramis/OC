@@ -53,7 +53,6 @@ class ReportController(DataManager):
         players = self.load_players()
         sorted_players = sorted(players, key=lambda x: (x['last_name'].lower(), x['first_name'].lower()))
         self.view.show_players_list(sorted_players)
-        self.manage_reports()
 
     def show_all_tournaments(self):
         """
@@ -69,7 +68,6 @@ class ReportController(DataManager):
         tournaments = self.load_tournaments()
         sorted_tournaments = sorted(tournaments, key=lambda x: x['startDate'])
         self.view.show_all_tournaments(sorted_tournaments)
-        self.manage_reports()
 
     def show_tournament_by_location(self):
         """
@@ -97,8 +95,6 @@ class ReportController(DataManager):
         else:
             self.view.show_tournament_details(None)
 
-        self.manage_reports()
-
     def show_tournament_players(self):
         name = self.view.get_tournament_name()
         tournaments = self.load_tournaments()
@@ -117,8 +113,6 @@ class ReportController(DataManager):
         else:
             self.view.show_tournament_rounds(None, None)
 
-        self.manage_reports()
-
     def show_tournament_rounds(self):
         """Display rounds and matches of a tournament"""
         name = self.view.get_tournament_name()
@@ -131,4 +125,3 @@ class ReportController(DataManager):
             self.view.show_tournament_rounds(tournament['roundList'], tournament['name'])
         else:
             self.view.show_tournament_rounds(None, None)
-        self.manage_reports()

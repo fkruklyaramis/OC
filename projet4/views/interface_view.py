@@ -16,9 +16,13 @@ class InterfaceView():
 
         for value in self.choice_list:
             print(f"{value['value']} : {value['label']}")
-        choice = int(input("Choose an option : "))
-
-        os.system('cls' if os.name == 'nt' else 'clear')
+        choice_input = input("Choose an option : ")
+        choice = 0
+        try:
+            choice = int(choice_input)
+            os.system('cls' if os.name == 'nt' else 'clear')
+        except ValueError:
+            print(f"Invalid choice : {choice_input}, please try again.")
         return choice
 
     def set_choice_list(self, choice_list):
