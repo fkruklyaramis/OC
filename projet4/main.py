@@ -7,6 +7,7 @@ def main():
     while True:
         main_view = InterfaceView
         InterfaceController(main_view).show_menu()
+        # appeler menu_tournament directement ici
 
 
 if __name__ == "__main__":
