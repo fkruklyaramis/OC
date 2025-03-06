@@ -9,7 +9,7 @@ students = {
          'Francais': 85,
          'Histoire': 70
     },
-     'Charlie': {
+    'Charlie': {
          'Mathematiques': 88,
          'Francais': 92,
          'Histoire': 78

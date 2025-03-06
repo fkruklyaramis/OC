@@ -4,6 +4,7 @@ class Book:
         self.author = author
         self.year = year
 
+
 class Library:
     def __init__(self):
         self.books = []
@@ -16,7 +17,7 @@ class Library:
         for book in self.books:
             if book.title == book_title:
                 self.books.remove(book)
-                return  
+                return
 
     def borrow_book(self, book_title):
         for book in self.books:
@@ -37,7 +38,8 @@ class Library:
 
     def borrowed_books(self):
         return [book.title for book in self.borrow_books]
-    
+
+
 mylibrary = Library()
 book = Book("Harry Potter", "J.K. Rowling", 1997)
 mylibrary.add_book(book)
@@ -47,7 +49,7 @@ print("Borrow book")
 mylibrary.borrow_book("Harry Potter")
 print(f"available books: {mylibrary.available_books()}")
 print(mylibrary.borrowed_books())
-print ("rteurn book")
+print("return book")
 mylibrary.return_book("Harry Potter")
 print(f"available books: {mylibrary.available_books()}")
 print("Remove book")

@@ -7,6 +7,7 @@ class Person:
         print(f"Name: {self.name}")
         print(f"Age: {self.age}")
 
+
 class Employee(Person):
     def __init__(self, name, age, salary):
         super().__init__(name, age)

@@ -4,7 +4,9 @@ def calculate_average(numbers: list) -> float:
     for number in numbers:
         sum += number
     average = sum / len(numbers)
-    return average 
+
+    return average
+
 
 # Exemple d'utilisation de la fonction
 numbers = [10, 20, 30, 40, 50]

@@ -9,7 +9,8 @@ class Rectangle:
     def calculate_perimeter(self):
         return 2 * (self.width + self.length)
 
-rectangle = Rectangle(5, 3) 
+
+rectangle = Rectangle(5, 3)
 print("Largeur:", rectangle.width)
 print("Longueur:", rectangle.length)
 print("Aire:", rectangle.calculate_area())
